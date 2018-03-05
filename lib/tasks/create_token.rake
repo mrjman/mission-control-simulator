@@ -8,7 +8,9 @@ namespace :token do
 
     token = Token.create!(
       client_id: ENV['CLIENT_ID'],
-      client_secret: ENV['CLIENT_SECRET']
+      client_secret: ENV['CLIENT_SECRET'],
+      access_token_type: 'bearer',
+      access_token_scope: 'basic'
     )
 
     puts "Success: Created token with access_token #{token.access_token}"
