@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       collection do
         get :current, to: 'users#show'
         match :current, to: 'users#update', via: [:put, :patch]
+        delete :current, to: 'users#destroy'
         post :forgottenpass
       end
     end
