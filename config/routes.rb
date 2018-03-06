@@ -11,4 +11,10 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  namespace :admin do
+    resources :users, only: [:index, :destroy]
+  end
+
+  root to: 'admin/users#index'
 end

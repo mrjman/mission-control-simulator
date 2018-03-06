@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_access_token!, only: [:create, :forgottenpass]
   before_action :authenticate_user_from_access_token!, only: [:show, :update, :destroy]
-
+  
   def token
     @token_params = token_params
     @token = Token.find_by(@token_params.slice(:client_secret).merge(user_id: nil))

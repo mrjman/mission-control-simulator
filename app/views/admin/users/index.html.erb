@@ -1,0 +1,28 @@
+<% if flash.notice.present? %>
+  <div class="alert-notice">
+    <%= flash.notice %>
+  </div>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Access Token</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.first_name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= user.token&.access_token %></td>
+        <td><%= link_to 'Delete User', admin_user_path(user), method: :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
