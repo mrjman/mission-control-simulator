@@ -6,8 +6,7 @@ class User < ApplicationRecord
 
   has_one :token, inverse_of: :user, dependent: :destroy
 
-  # validates :access_token, presence: true
-  validates :email, presence: true, format: { with: EMAIL_REGEX }
+  validates :email, presence: true, uniqueness: true, format: { with: EMAIL_REGEX }
   validates :password, format: { with: PASSWORD_REGEX }, if: -> { password.present? }
   validates :first_name, presence: true
   validates :last_name, presence: true
