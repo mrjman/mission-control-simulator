@@ -1,6 +1,6 @@
 class Admin::UsersController < AdminController
   def index
-    @users = User.all
+    @users = User.includes(:token)
   end
 
   def destroy
