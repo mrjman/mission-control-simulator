@@ -1,16 +1,25 @@
 class UsersController < ApplicationController
   before_action :authenticate_access_token!, only: [:create, :forgottenpass]
-  before_action :authenticate_user_from_access_token!, only: [:show, :update]
+  before_action :authenticate_user_from_access_token!, only: [:show, :update, :destroy]
 
   def token
-    @token = Token.find_by(token_params.slice(:client_id, :client_secret))
+    @token_params = token_params
+    @token = Token.find_by(@token_params.slice(:client_secret).merge(user_id: nil))
 
     success = @token.present?
-    if token_params[:grant_type] == 'password'
-      user = User.find_by(email: token_params[:username])&.authenticate(token_params[:password])
-      success &= user.present? && user.update_attributes(token: @token)
-    elsif token_params[:username].blank? && token_params[:password].blank?
-      success &= token_params[:grant_type] == 'client_credentials'
+    if @token_params[:grant_type] == 'password'
+      user = User.find_by(email: @token_params[:username])&.authenticate(@token_params[:password])
+
+      if user.present?
+        @token = user&.build_token(@token_params.slice(:client_id, :client_secret).merge(access_token_type: 'bearer',
+      access_token_scope: 'basic'))
+      end
+
+      success &= user.present? && user.save
+    elsif @token_params[:username].blank? && @token_params[:password].blank?
+      success &= @token_params[:grant_type] == 'client_credentials'
+    else
+      success = false
     end
 
     if success
@@ -70,6 +79,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    current_user.destroy
+    head :no_content
+  end
+
   def current_user
     @current_user
   end
@@ -87,7 +101,7 @@ class UsersController < ApplicationController
   def authenticate_user_from_access_token!
     authenticate_with_http_token do |token, _|
       @token = Token.find_by(access_token: token)
-      @current_user = User.find_by(token_id: @token&.id)
+      @current_user = @token&.user
     end
 
     unless current_user.present?
