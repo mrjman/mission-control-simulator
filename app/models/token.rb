@@ -1,7 +1,7 @@
 class Token < ApplicationRecord
   after_initialize :generate_access_token, if: :new_record?
 
-  has_many :users, inverse_of: :token, dependent: :nullify
+  belongs_to :user, inverse_of: :token, optional: true
 
   def expires_in
     1.day.to_i

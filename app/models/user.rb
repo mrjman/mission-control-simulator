@@ -4,7 +4,7 @@ class User < ApplicationRecord
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
   PASSWORD_REGEX = /\A(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]{0,}).{8,}\z/.freeze
 
-  belongs_to :token, optional: true
+  has_one :token, inverse_of: :user, dependent: :destroy
 
   # validates :access_token, presence: true
   validates :email, presence: true, format: { with: EMAIL_REGEX }
