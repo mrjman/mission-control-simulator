@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       user = User.find_by(email: @token_params[:username])&.authenticate(@token_params[:password])
 
       if user.present?
-        @token = user&.build_token(@token_params.slice(:client_id, :client_secret, :expires_in))
+        @token = user.build_token(@token_params.slice(:client_id, :client_secret, :expires_in))
       end
 
       success &= user.present? && user.save
