@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_access_token!, only: [:create, :forgottenpass]
   before_action :authenticate_user_from_access_token!, only: [:show, :update, :destroy]
-  
+
   def token
     @token_params = token_params
     @token = Token.find_by(@token_params.slice(:client_secret).merge(user_id: nil))
@@ -11,8 +11,7 @@ class UsersController < ApplicationController
       user = User.find_by(email: @token_params[:username])&.authenticate(@token_params[:password])
 
       if user.present?
-        @token = user&.build_token(@token_params.slice(:client_id, :client_secret).merge(access_token_type: 'bearer',
-      access_token_scope: 'basic'))
+        @token = user&.build_token(@token_params.slice(:client_id, :client_secret, :expires_in))
       end
 
       success &= user.present? && user.save
@@ -125,7 +124,8 @@ class UsersController < ApplicationController
       :client_secret,
       :grant_type,
       :username,
-      :password
+      :password,
+      :expires_in
     )
   end
 
