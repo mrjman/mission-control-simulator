@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180306150224) do
+ActiveRecord::Schema.define(version: 20180306234710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,11 +20,12 @@ ActiveRecord::Schema.define(version: 20180306150224) do
     t.string "client_id"
     t.string "client_secret"
     t.datetime "access_token_created_at"
-    t.string "access_token_type"
-    t.string "access_token_scope"
+    t.string "access_token_type", default: "bearer"
+    t.string "access_token_scope", default: "basic"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.integer "expires_in", default: 86400
     t.index ["user_id"], name: "index_tokens_on_user_id"
   end
 
