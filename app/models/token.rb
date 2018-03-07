@@ -3,10 +3,6 @@ class Token < ApplicationRecord
 
   belongs_to :user, inverse_of: :token, optional: true
 
-  def expires_in
-    1.day.to_i
-  end
-
   def as_json(options = default_json_options)
     super(options).deep_transform_keys! do |key|
       key = 'scope' if key.to_s == 'access_token_scope'
@@ -26,8 +22,7 @@ class Token < ApplicationRecord
 
   def default_json_options
     {
-      only: [:access_token, :access_token_type, :access_token_scope],
-      methods: [:expires_in]
+      only: [:access_token, :access_token_type, :access_token_scope, :expires_in],
     }
   end
 end
