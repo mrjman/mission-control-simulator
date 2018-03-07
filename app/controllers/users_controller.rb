@@ -103,7 +103,7 @@ class UsersController < ApplicationController
       @current_user = @token&.user
     end
 
-    unless current_user.present?
+    if @current_user.blank? || @token.expired?
       render(
         json: {
           "errors": [

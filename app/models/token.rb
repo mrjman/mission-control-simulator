@@ -11,6 +11,14 @@ class Token < ApplicationRecord
     end
   end
 
+  def expired?
+    (access_token_created_at.utc + expires_in).past?
+  end
+
+  def active?
+    !expired?
+  end
+
   private
 
   def generate_access_token
