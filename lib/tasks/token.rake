@@ -1,16 +1,17 @@
 namespace :token do
   desc 'Create initial token only if not present'
   task :create => [:environment] do
-    return if Token.exists?
+    if Token.exists?
+      puts "Token already exists cannot create multiple"
+      next
+    end
 
     puts 'Error: must define CLIENT_ID in env' if ENV['CLIENT_ID'].blank?
     puts 'Error: must define CLIENT_SECRET in env' if ENV['CLIENT_SECRET'].blank?
 
     token = Token.create!(
       client_id: ENV['CLIENT_ID'],
-      client_secret: ENV['CLIENT_SECRET'],
-      access_token_type: 'bearer',
-      access_token_scope: 'basic'
+      client_secret: ENV['CLIENT_SECRET']
     )
 
     puts "Success: Created token with access_token #{token.access_token}"
